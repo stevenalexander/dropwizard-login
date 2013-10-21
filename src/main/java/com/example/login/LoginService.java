@@ -2,7 +2,9 @@ package com.example.login;
 
 import com.example.login.resources.SessionResource;
 import com.example.login.resources.UserResource;
+
 import com.example.login.dao.UserDAO;
+import com.example.login.dao.SessionDAO;
 
 import com.yammer.dropwizard.Service;
 import com.yammer.dropwizard.config.Environment;
@@ -27,9 +29,10 @@ public class LoginService extends Service<LoginConfiguration> {
         final DatabaseFactory factory = new DatabaseFactory(environment);
         final Database db = factory.build(configuration.getDatabase(), "mysql");
 
-        final UserDAO dao = db.onDemand(UserDAO.class);
+        final UserDAO userDAO = db.onDemand(UserDAO.class);
+        final SessionDAO sessionDAO = db.onDemand(SessionDAO.class);
 
-        environment.addResource(new UserResource(dao));
-        environment.addResource(new SessionResource());
+        environment.addResource(new UserResource(userDAO));
+        environment.addResource(new SessionResource(userDAO, sessionDAO));
     }
 }
