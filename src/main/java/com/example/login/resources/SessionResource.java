@@ -31,6 +31,9 @@ public class SessionResource {
             throw new Exception("user not found");
         }
 
-        return new Session(username);
+        Session session = new Session(username);
+        sessionDAO.insert(session.getAccessToken(), session.getIdentity(), new java.util.Date());
+
+        return session;
     }
 }
